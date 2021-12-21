@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -11,6 +11,8 @@ import Popup from "../components/Popup";
 import { MapAssetContext } from "../context/MapAssetContextProvider";
 import { iconHouse, iconCondo, iconTownHouse } from "../components/Icon";
 import Grid from "../components/Grid";
+import CloseIcon from "@mui/icons-material/Close";
+import GridRadio from "../components/GridRadio";
 
 function CustomMapEvents() {
   const {
@@ -71,10 +73,16 @@ function CustomMapEvents() {
     click: () => {
       if (Object.keys(selectedMarker).length > 0) {
         setSelectedMarker({});
-        map.flyTo(latlon, Math.min(14, zoom));
       }
     },
   });
+
+  useEffect(() => {
+    if (latlon && zoom && Object.keys(selectedMarker).length === 0) {
+      map.flyTo(latlon, Math.min(14, zoom));
+    }
+    return;
+  }, [selectedMarker]);
 
   useEffect(() => {
     const bbox = map.getBounds();
@@ -131,7 +139,7 @@ function CustomMap() {
     setSelectedMarker,
     grids,
   } = useContext(MapAssetContext);
-
+  const [layer, setLayer] = useState("None");
   return (
     <div className="custom-map">
       <MapContainer
@@ -184,7 +192,120 @@ function CustomMap() {
               })}
           </>
         )}
-        {grids &&
+        {layer === "Market Price" &&
+          grids &&
+          grids.length > 0 &&
+          grids.map((elem, index) => {
+            return (
+              elem.price_dol > 0 && (
+                <Grid
+                  key={index}
+                  left={elem.left}
+                  right={elem.right}
+                  top={elem.top}
+                  bottom={elem.bottom}
+                  value={elem.price}
+                  min={0}
+                  max={500000}
+                  name="Market Price"
+                />
+              )
+            );
+          })}
+        {layer === "DOL Price" &&
+          grids &&
+          grids.length > 0 &&
+          grids.map((elem, index) => {
+            return (
+              elem.price_dol > 0 && (
+                <Grid
+                  key={index}
+                  left={elem.left}
+                  right={elem.right}
+                  top={elem.top}
+                  bottom={elem.bottom}
+                  value={elem.price_dol}
+                  min={0}
+                  max={200000}
+                  name="DOL Price"
+                />
+              )
+            );
+          })}
+        {layer === "Attraction Score" &&
+          grids &&
+          grids.length > 0 &&
+          grids.map((elem, index) => {
+            return (
+              <Grid
+                key={index}
+                left={elem.left}
+                right={elem.right}
+                top={elem.top}
+                bottom={elem.bottom}
+                value={elem.score_attraction}
+                min={0}
+                max={10}
+                name="Attraction Score"
+              />
+            );
+          })}
+        {layer === "Education Score" &&
+          grids &&
+          grids.length > 0 &&
+          grids.map((elem, index) => {
+            return (
+              <Grid
+                key={index}
+                left={elem.left}
+                right={elem.right}
+                top={elem.top}
+                bottom={elem.bottom}
+                value={elem.education_score}
+                min={0}
+                max={10}
+                name="Education Score"
+              />
+            );
+          })}
+        {layer === "Service Score" &&
+          grids &&
+          grids.length > 0 &&
+          grids.map((elem, index) => {
+            return (
+              <Grid
+                key={index}
+                left={elem.left}
+                right={elem.right}
+                top={elem.top}
+                bottom={elem.bottom}
+                value={elem.service_score}
+                min={0}
+                max={10}
+                name="Service Score"
+              />
+            );
+          })}
+        {layer === "Transportation Score" &&
+          grids &&
+          grids.length > 0 &&
+          grids.map((elem, index) => {
+            return (
+              <Grid
+                key={index}
+                left={elem.left}
+                right={elem.right}
+                top={elem.top}
+                bottom={elem.bottom}
+                value={elem.bts_score}
+                min={0}
+                max={10}
+                name="Transportation Score"
+              />
+            );
+          })}
+        {layer === "Environment Score" &&
+          grids &&
           grids.length > 0 &&
           grids.map((elem, index) => {
             return (
@@ -204,10 +325,27 @@ function CustomMap() {
         <ZoomControl position="bottomleft" />
       </MapContainer>
       {selectedMarker && Object.keys(selectedMarker).length > 0 && (
-        <div className="asset-card">
-          <Popup data={selectedMarker} />
+        <div className="asset-div">
+          <CloseIcon
+            className="close-asset-card"
+            onClick={(e) => {
+              setSelectedMarker({});
+            }}
+          />
+          <div className="asset-card">
+            <Popup data={selectedMarker} />
+          </div>
         </div>
       )}
+      <div className="grid-radio">
+        <GridRadio
+          handleChange={(e) => {
+            console.log(e.target.defaultValue);
+            setLayer(e.target.defaultValue);
+          }}
+          selected={layer}
+        />
+      </div>
     </div>
   );
 }

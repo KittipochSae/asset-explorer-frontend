@@ -168,7 +168,11 @@ function Popup({ data }) {
                 </Grid>
                 <Grid item xs={8}>
                   <Typography color="#FF7B2E" sx={{ fontWeight: "bold" }}>
-                    {`${float_to_string(data.avg_1km)} บาท/ตร.ว.`}
+                    {data.asset_type === "05 คอนโดมิเนียม"
+                      ? `${float_to_string(data.avg_100m)} บาท/ตร.ว.`
+                      : `${float_to_string(
+                          data.avg_100m
+                        )} บาท/ตร.ว. (${float_to_string(data.dol_ratio)})`}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -176,7 +180,11 @@ function Popup({ data }) {
                 </Grid>
                 <Grid item xs={8}>
                   <Typography color="#FF7B2E" sx={{ fontWeight: "bold" }}>
-                    {`${float_to_string(data.mk_avg_1km)} บาท/ตร.ว.`}
+                    {data.asset_type === "05 คอนโดมิเนียม"
+                      ? `${float_to_string(data.mk_avg_1km)} บาท/ตร.ว. `
+                      : `${float_to_string(
+                          data.mk_avg_1km
+                        )} บาท/ตร.ว. (${float_to_string(data.mk_ratio)})`}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -212,6 +220,54 @@ function Popup({ data }) {
               </Grid>
             </AccordionDetails>
           </Accordion>
+          <Accordion defaultExpanded={true} disableGutters={true}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1d-content"
+              id="panel1d-header"
+            >
+              <Typography color="#00796b" sx={{ fontWeight: "bold" }}>
+                Customer Segmentation
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <Typography color="#00796b">Income</Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Typography color="#00796b" sx={{ fontWeight: "bold" }}>
+                    {income_text(
+                      data["less_15k"],
+                      data["15k_50k"],
+                      data["50k_100k"],
+                      data["100k_more"]
+                    )}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography color="#00796b">Age</Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Typography color="#00796b" sx={{ fontWeight: "bold" }}>
+                    {age_text(data["age_y"], data["age_x"], data["age_b"])}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography color="#00796b">Relation</Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Typography color="#00796b" sx={{ fontWeight: "bold" }}>
+                    {relation_text(
+                      data["r_single"],
+                      data["r_couple"],
+                      data["r_family"]
+                    )}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
         </>
       ) : (
         <></>
@@ -228,4 +284,47 @@ function float_to_string(number) {
     maximumFractionDigits: 2,
   };
   return Number(number).toLocaleString("en", options);
+}
+
+function income_text(_less_15k, _15k_50k, _50k_100k, _100k_more) {
+  if (_less_15k) {
+    return "< 15,000 บาท/เดือน";
+  }
+  if (_15k_50k) {
+    return "15,000 - 50,000 บาท/เดือน";
+  }
+  if (_50k_100k) {
+    return "50,000 - 100,000 บาท/เดือน";
+  }
+  if (_100k_more) {
+    return "> 100,000 บาท/เดือน";
+  }
+}
+
+function age_text(age_y, age_x, age_b) {
+  var text = [];
+  if (age_y) {
+    text.push(" Gen Y (21 - 37 ปี)");
+  }
+  if (age_x) {
+    text.push(" Gen X (38 - 53 ปี)");
+  }
+  if (age_b) {
+    text.push(" Gen B (> 53 ปี)");
+  }
+  return text.join(", ");
+}
+
+function relation_text(r_single, r_couple, r_family) {
+  var text = [];
+  if (r_single) {
+    text.push("Single");
+  }
+  if (r_couple) {
+    text.push("Couple w/o Kids");
+  }
+  if (r_family) {
+    text.push("Family with Kids");
+  }
+  return text.join(", ");
 }

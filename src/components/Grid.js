@@ -7,7 +7,7 @@ function Grid({ left, right, top, bottom, value, min, max, name }) {
   ];
 
   const pathOptions = {
-    color: getColor((value - min) / (max - min)),
+    color: getColor(Math.abs(value - min) / Math.abs(max - min)),
     weight: 0.7,
   };
 

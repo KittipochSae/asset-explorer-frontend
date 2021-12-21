@@ -6,11 +6,12 @@ const axios = require("axios");
 
 function MapAssetContextProvider({ children }) {
   const [assetMarkers, setAssetMarkers] = useState([]);
+  const [grids, setGrids] = useState([]);
   const [zoom, setZoom] = useState(12);
   const [latlon, setLatlon] = useState();
   const [selectedMarker, setSelectedMarker] = useState({});
 
-  function updateAssetMarkers(bbox) {
+  function updateAssetMarkers(bbox, zoom) {
     const url = `${config.BACKEND_URL}/map`;
     axios
       .get(url, {
@@ -19,10 +20,31 @@ function MapAssetContextProvider({ children }) {
           right: bbox.right,
           top: bbox.top,
           bottom: bbox.bottom,
+          zoom: zoom,
         },
       })
       .then(function (response) {
-        setAssetMarkers(response.data);
+        setAssetMarkers(response.data.markers);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function updateGrids(bbox, zoom) {
+    const url = `${config.BACKEND_URL}/grid`;
+    axios
+      .get(url, {
+        params: {
+          left: bbox.left,
+          right: bbox.right,
+          top: bbox.top,
+          bottom: bbox.bottom,
+          zoom: zoom,
+        },
+      })
+      .then(function (response) {
+        setGrids(response.data.grids);
       })
       .catch(function (error) {
         console.log(error);
@@ -34,6 +56,8 @@ function MapAssetContextProvider({ children }) {
       value={{
         assetMarkers,
         updateAssetMarkers,
+        grids,
+        updateGrids,
         zoom,
         setZoom,
         latlon,

@@ -19,6 +19,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   borderWidth: "1px",
   [`&.${linearProgressClasses.colorPrimary}`]: {
     backgroundColor: theme.palette.grey[100],
+    borderRadius: 3,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 3,
@@ -203,7 +204,7 @@ function Popup({ data }) {
                   <LinearProgressWithLabel value={data.score_bts} />
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography color="#FF7B2E">Location</Typography>
+                  <Typography color="#FF7B2E">Environment</Typography>
                 </Grid>
                 <Grid item xs={8}>
                   <LinearProgressWithLabel value={data.score_location} />

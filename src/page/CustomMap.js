@@ -10,11 +10,12 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 import Popup from "../components/Popup";
 import { MapAssetContext } from "../context/MapAssetContextProvider";
 import { iconHouse, iconCondo, iconTownHouse } from "../components/Icon";
+import Grid from "../components/Grid";
 
 function CustomMapEvents() {
   const {
-    assetMarkers,
     updateAssetMarkers,
+    updateGrids,
     setZoom,
     zoom,
     latlon,
@@ -24,24 +25,48 @@ function CustomMapEvents() {
 
   const map = useMapEvents({
     dragend: () => {
-      const bbox = map.getBounds();
-      updateAssetMarkers({
-        left: bbox._southWest.lng,
-        right: bbox._northEast.lng,
-        top: bbox._northEast.lat,
-        bottom: bbox._southWest.lat,
-      });
       setZoom(map.getZoom());
+      const bbox = map.getBounds();
+      updateAssetMarkers(
+        {
+          left: bbox._southWest.lng,
+          right: bbox._northEast.lng,
+          top: bbox._northEast.lat,
+          bottom: bbox._southWest.lat,
+        },
+        map.getZoom()
+      );
+      updateGrids(
+        {
+          left: bbox._southWest.lng,
+          right: bbox._northEast.lng,
+          top: bbox._northEast.lat,
+          bottom: bbox._southWest.lat,
+        },
+        map.getZoom()
+      );
     },
     zoomend: () => {
-      const bbox = map.getBounds();
-      updateAssetMarkers({
-        left: bbox._southWest.lng,
-        right: bbox._northEast.lng,
-        top: bbox._northEast.lat,
-        bottom: bbox._southWest.lat,
-      });
       setZoom(map.getZoom());
+      const bbox = map.getBounds();
+      updateAssetMarkers(
+        {
+          left: bbox._southWest.lng,
+          right: bbox._northEast.lng,
+          top: bbox._northEast.lat,
+          bottom: bbox._southWest.lat,
+        },
+        map.getZoom()
+      );
+      updateGrids(
+        {
+          left: bbox._southWest.lng,
+          right: bbox._northEast.lng,
+          top: bbox._northEast.lat,
+          bottom: bbox._southWest.lat,
+        },
+        map.getZoom()
+      );
     },
     click: () => {
       if (Object.keys(selectedMarker).length > 0) {
@@ -53,14 +78,27 @@ function CustomMapEvents() {
 
   useEffect(() => {
     const bbox = map.getBounds();
-    updateAssetMarkers({
-      left: bbox._southWest.lng,
-      right: bbox._northEast.lng,
-      top: bbox._northEast.lat,
-      bottom: bbox._southWest.lat,
-    });
+    updateAssetMarkers(
+      {
+        left: bbox._southWest.lng,
+        right: bbox._northEast.lng,
+        top: bbox._northEast.lat,
+        bottom: bbox._southWest.lat,
+      },
+      12
+    );
+    updateGrids(
+      {
+        left: bbox._southWest.lng,
+        right: bbox._northEast.lng,
+        top: bbox._northEast.lat,
+        bottom: bbox._southWest.lat,
+      },
+      12
+    );
     setZoom(map.getZoom());
     return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -68,6 +106,7 @@ function CustomMapEvents() {
       map.flyTo(latlon, Math.max(16, zoom));
     }
     return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latlon]);
 
   return null;
@@ -84,13 +123,19 @@ function selectedIcon(asset_type) {
 }
 
 function CustomMap() {
-  const { assetMarkers, zoom, setLatlon, selectedMarker, setSelectedMarker } =
-    useContext(MapAssetContext);
+  const {
+    assetMarkers,
+    zoom,
+    setLatlon,
+    selectedMarker,
+    setSelectedMarker,
+    grids,
+  } = useContext(MapAssetContext);
 
   return (
     <div className="custom-map">
       <MapContainer
-        center={[13.736717, 100.523186]}
+        center={[13.732227456, 100.568009766]}
         zoom={12}
         scrollWheelZoom={false}
         zoomControl={false}
@@ -139,6 +184,23 @@ function CustomMap() {
               })}
           </>
         )}
+        {grids &&
+          grids.length > 0 &&
+          grids.map((elem, index) => {
+            return (
+              <Grid
+                key={index}
+                left={elem.left}
+                right={elem.right}
+                top={elem.top}
+                bottom={elem.bottom}
+                value={elem.location_score}
+                min={0}
+                max={10}
+                name="Enviroment Score"
+              />
+            );
+          })}
         <ZoomControl position="bottomleft" />
       </MapContainer>
       {selectedMarker && Object.keys(selectedMarker).length > 0 && (

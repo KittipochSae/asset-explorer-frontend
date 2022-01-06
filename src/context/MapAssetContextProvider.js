@@ -24,7 +24,7 @@ function MapAssetContextProvider({ children }) {
         },
       })
       .then(function (response) {
-        setAssetMarkers(response.data.markers);
+        setAssetMarkers(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -44,7 +44,7 @@ function MapAssetContextProvider({ children }) {
         },
       })
       .then(function (response) {
-        setGrids(response.data.grids);
+        setGrids(response.data);
       })
       .catch(function (error) {
         console.log(error);

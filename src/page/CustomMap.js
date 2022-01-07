@@ -261,7 +261,7 @@ function CustomMap() {
                 right={elem.right}
                 top={elem.top}
                 bottom={elem.bottom}
-                value={elem.education_score}
+                value={elem.score_education}
                 min={0}
                 max={10}
                 name="Education Score"
@@ -279,7 +279,7 @@ function CustomMap() {
                 right={elem.right}
                 top={elem.top}
                 bottom={elem.bottom}
-                value={elem.service_score}
+                value={elem.score_service}
                 min={0}
                 max={10}
                 name="Service Score"
@@ -297,7 +297,7 @@ function CustomMap() {
                 right={elem.right}
                 top={elem.top}
                 bottom={elem.bottom}
-                value={elem.bts_score}
+                value={elem.score_bts}
                 min={0}
                 max={10}
                 name="Transportation Score"
@@ -315,7 +315,7 @@ function CustomMap() {
                 right={elem.right}
                 top={elem.top}
                 bottom={elem.bottom}
-                value={elem.location_score}
+                value={elem.score_location}
                 min={0}
                 max={10}
                 name="Enviroment Score"

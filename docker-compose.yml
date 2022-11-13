@@ -1,0 +1,8 @@
+version: "3"
+services:
+  asset_explorer_frontend:
+    build: .
+    container_name: asset_explorer_frontend
+    ports:
+      - "3000:3000"
+    restart: always

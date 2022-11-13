@@ -1,6 +1,6 @@
 import "./App.css";
-import MapAssetContextProvider from "./context/MapAssetContextProvider";
-import CustomMap from "./page/CustomMap";
+import MapAssetContextProvider from "./contexts/MapAssetContextProvider";
+import CustomMap from "./pages/CustomMap";
 
 function App() {
   return (

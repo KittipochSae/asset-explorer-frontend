@@ -8,7 +8,7 @@ import {
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import Popup from "../components/Popup";
-import { MapAssetContext } from "../context/MapAssetContextProvider";
+import { MapAssetContext } from "../contexts/MapAssetContextProvider";
 import { iconHouse, iconCondo, iconTownHouse } from "../components/Icon";
 import Grid from "../components/Grid";
 import CloseIcon from "@mui/icons-material/Close";

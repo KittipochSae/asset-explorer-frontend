@@ -1,8 +1,8 @@
 import React, { createContext, useState } from "react";
-import config from "../config.json";
+import getMap from "../apis/getMap";
+import getGrid from "../apis/getGrid";
 
 export const MapAssetContext = createContext();
-const axios = require("axios");
 
 function MapAssetContextProvider({ children }) {
   const [assetMarkers, setAssetMarkers] = useState([]);
@@ -12,43 +12,29 @@ function MapAssetContextProvider({ children }) {
   const [selectedMarker, setSelectedMarker] = useState({});
 
   function updateAssetMarkers(bbox, zoom) {
-    const url = `${config.BACKEND_URL}/map`;
-    axios
-      .get(url, {
-        params: {
-          left: bbox.left,
-          right: bbox.right,
-          top: bbox.top,
-          bottom: bbox.bottom,
-          zoom: zoom,
-        },
-      })
-      .then(function (response) {
+    getMap(
+      bbox,
+      zoom,
+      (response) => {
         setAssetMarkers(response.data);
-      })
-      .catch(function (error) {
+      },
+      (error) => {
         console.log(error);
-      });
+      }
+    );
   }
 
   function updateGrids(bbox, zoom) {
-    const url = `${config.BACKEND_URL}/grid`;
-    axios
-      .get(url, {
-        params: {
-          left: bbox.left,
-          right: bbox.right,
-          top: bbox.top,
-          bottom: bbox.bottom,
-          zoom: zoom,
-        },
-      })
-      .then(function (response) {
+    getGrid(
+      bbox,
+      zoom,
+      (response) => {
         setGrids(response.data);
-      })
-      .catch(function (error) {
+      },
+      (error) => {
         console.log(error);
-      });
+      }
+    );
   }
 
   return (
